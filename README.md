@@ -1,40 +1,104 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# Projet Seminar Management
 
-First, run the development server:
+Ce projet permet de gérer des séminaires, d'affecter des formateurs à des cours, de suivre les participants, et d'envoyer des notifications par e-mail. Il utilise **NestJS** pour le backend et **SQLite** comme base de données.
+
+## Prérequis
+
+Avant de commencer, assurez-vous que vous avez installé les outils suivants :
+
+- [Node.js](https://nodejs.org/) (version 14.x ou supérieure)
+- [npm](https://www.npmjs.com/) ou [Yarn](https://yarnpkg.com/)
+- [Prisma](https://www.prisma.io/docs/getting-started) (si vous n'avez pas encore installé Prisma, suivez les instructions sur leur site)
+
+## Installation
+
+### 1. Cloner le projet
+
+Clonez ce projet dans votre répertoire local.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <url_du_projet>
+cd <nom_du_projet>
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Installer les dépendances
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+Installez toutes les dépendances nécessaires pour le projet.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+```bash
+npm install
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+ou si vous utilisez **Yarn** :
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+```bash
+yarn install
+```
 
-## Learn More
+### 3. Configurer la base de données avec Prisma
 
-To learn more about Next.js, take a look at the following resources:
+Ce projet utilise **SQLite** comme base de données. Nous allons configurer Prisma pour qu'il puisse se connecter à une base SQLite locale.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### Étape 1 : Configurer le fichier `.env`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Le fichier `.env` contient les informations de connexion à la base de données. Assurez-vous que le fichier `.env` se trouve à la racine du projet et qu'il contient la ligne suivante :
 
-## Deploy on Vercel
+```env
+DATABASE_URL="file:./dev.db"
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Cela signifie que la base de données SQLite sera stockée dans un fichier appelé `dev.db` à la racine du projet.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+#### Étape 2 : Générer le client Prisma
+
+Une fois que vous avez configuré le fichier `.env`, générez le client Prisma :
+
+```bash
+npx prisma generate
+```
+
+#### Étape 3 : Appliquer les migrations
+
+Prisma gère les migrations de base de données. Appliquez les migrations pour créer les tables nécessaires dans votre base de données SQLite.
+
+```bash
+npx prisma migrate dev --name init
+```
+
+#### Étape 4 : Lancer le serveur de mail
+```bash
+docker run -p 1025:1025 -p 8025:8025 axllent/mailpit
+```
+
+### 4. Lancer l'application
+
+Maintenant que tout est configuré, vous pouvez démarrer votre application NextJS.
+
+Cela va démarrer le serveur sur le port par défaut (3000), et vous pourrez accéder à l'API à l'adresse suivante : [http://localhost:3000](http://localhost:3000).
+
+### 5. Accéder à l'API
+
+L'API est maintenant prête à être utilisée. Vous pouvez tester les points de terminaison de votre API en envoyant des requêtes HTTP à [http://localhost:3000](http://localhost:3000) en utilisant un outil comme **Postman** ou **Insomnia**.
+
+
+###  Scripts utiles
+
+Voici quelques scripts npm utiles pour gérer le projet :
+
+- **`npm run start`** : Lance l'application en production.
+- **`npm run start:dev`** : Lance l'application en mode développement (avec `ts-node`).
+- **`npm run build`** : Compile l'application pour la production.
+- **`npm run test`** : Lance les tests unitaires.
+- **`npm run prisma:generate`** : Générez le client Prisma.
+
+---
+
+## Dépannage
+
+- Si vous rencontrez des problèmes lors de la génération du client Prisma, assurez-vous que le fichier `.env` est correctement configuré.
+- Si Prisma ne peut pas se connecter à la base de données, vérifiez que la base de données SQLite a bien été créée dans le répertoire du projet (fichier `dev.db`).
+- Pour toute erreur liée à `prisma migrate dev`, essayez de supprimer le fichier `dev.db` et réexécutez `npx prisma migrate dev --name init` pour recommencer à zéro.
+
+---
+
