@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: seminar_db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: seminar_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - seminar_data:/var/lib/mysql
+    networks:
+      - seminar_network
+
+volumes:
+  seminar_data:
+
+networks:
+  seminar_network:
+    driver: bridge

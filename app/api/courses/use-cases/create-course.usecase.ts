@@ -5,6 +5,7 @@ import { GetTrainerUseCase } from "../../trainers/use-cases/get-trainer.usecase"
 import { TrainingSubjectRepository } from "../../training-subjects/repository/training-subject.repository";
 import { GetTrainingSubjectByIdUseCase } from "../../training-subjects/use-cases/get-training-subject.usecase";
 import { CheckTrainerAvailabilityUseCase } from "./trainer-availability.usecase";
+import { notifyTrainerByEmail } from "../../../../core/email/notify-trainer.service";
 
 interface CreateCourseDTO {
   name: string;
@@ -81,6 +82,7 @@ export class CreateCourseUseCase {
 
     const course = await this.courseRepository.createCourse(data);
 
+    await notifyTrainerByEmail(course);
     return course;
   }
 }
