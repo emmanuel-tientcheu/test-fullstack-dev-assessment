@@ -3,6 +3,7 @@ import { Course } from "@prisma/client";
 import { CreateCourseDTO } from "../dto/create-course.dto";
 import { CheckCourseConflictDTO } from "../dto/check-conflict-course.dto";
 import { startOfDay, endOfDay } from "date-fns";
+import { CheckTrainerAvailabilityDTO } from "../dto/check-trainer-availability-course.dto";
 
 export class CourseRepository {
   async createCourse(data: CreateCourseDTO): Promise<Course> {
@@ -36,6 +37,21 @@ export class CourseRepository {
           lte: endOfDay(date),
         },
         location: data.location,
+      },
+    });
+  }
+
+  async findCoursesByTrainerAndDateRange(
+    data: CheckTrainerAvailabilityDTO,
+  ): Promise<Course[]> {
+    const date = new Date(data.date);
+    return prisma.course.findMany({
+      where: {
+        trainerId: data.trainerId,
+        date: {
+          gte: startOfDay(date),
+          lte: endOfDay(date),
+        },
       },
     });
   }

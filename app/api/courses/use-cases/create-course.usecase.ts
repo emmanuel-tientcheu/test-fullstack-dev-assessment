@@ -2,8 +2,6 @@ import { Course } from "@prisma/client";
 import { CourseRepository } from "../repository/courses.repository";
 import { TrainerRepository } from "../../trainers/repository/trainners.repository";
 import { GetTrainerUseCase } from "../../trainers/use-cases/get-trainer.usecase";
-import { NextResponse } from "next/server";
-import { formatResponse } from "@/core/responseFormatter";
 import { TrainingSubjectRepository } from "../../training-subjects/repository/training-subject.repository";
 import { GetTrainingSubjectByIdUseCase } from "../../training-subjects/use-cases/get-training-subject.usecase";
 
@@ -45,9 +43,8 @@ export class CreateCourseUseCase {
       throw new Error("Invalid data provided");
     }
 
-    const getTrainerUseCase = new GetTrainerUseCase(this.trainerRepository);
-
     //verify if trainer exist
+    const getTrainerUseCase = new GetTrainerUseCase(this.trainerRepository);
     const trainer = await getTrainerUseCase.execute(Number(data.trainerId));
 
     if (!trainer) {
