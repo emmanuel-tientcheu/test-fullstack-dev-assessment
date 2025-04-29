@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     const trainer = await useCase.execute(validatedData);
 
     return NextResponse.json(
-      formatResponse("Trainer created successfully.", trainer, 200),
+      formatResponse("Trainer created successfully.", trainer, 201),
     );
   } catch (error) {
     return NextResponse.json(

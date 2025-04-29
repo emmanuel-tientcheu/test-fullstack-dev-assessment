@@ -63,7 +63,8 @@ export class CreateCourseUseCase {
       date: data.date,
     });
 
-    if(checkCourse.length >= 1) throw new Error("This trainer is already assigned to a course today");
+    if (checkCourse.length >= 1)
+      throw new Error("This trainer is already assigned to a course today");
 
     //verify if subject exist
     const getTrainingSubjectByIdUseCase = new GetTrainingSubjectByIdUseCase(

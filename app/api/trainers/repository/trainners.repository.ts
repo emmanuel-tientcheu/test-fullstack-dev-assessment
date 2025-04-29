@@ -78,4 +78,17 @@ export class TrainerRepository {
 
     return !!deleted;
   }
+
+  async findTrainersBySubjectId(subjectId: number): Promise<Trainer[]> {
+    return prisma.trainer.findMany({
+      where: {
+        trainingSubjects: {
+          some: { id: subjectId },
+        },
+      },
+      orderBy: {
+        name: "asc",
+      },
+    });
+  }
 }
