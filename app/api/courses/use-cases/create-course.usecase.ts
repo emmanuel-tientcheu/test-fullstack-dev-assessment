@@ -4,6 +4,7 @@ import { TrainerRepository } from "../../trainers/repository/trainners.repositor
 import { GetTrainerUseCase } from "../../trainers/use-cases/get-trainer.usecase";
 import { TrainingSubjectRepository } from "../../training-subjects/repository/training-subject.repository";
 import { GetTrainingSubjectByIdUseCase } from "../../training-subjects/use-cases/get-training-subject.usecase";
+import { CheckTrainerAvailabilityUseCase } from "./trainer-availability.usecase";
 
 interface CreateCourseDTO {
   name: string;
@@ -50,6 +51,19 @@ export class CreateCourseUseCase {
     if (!trainer) {
       throw new Error("Trainer not found");
     }
+
+    //check if the trainer is already assigned to another course
+    const checkTrainerAvailabilityUseCase = new CheckTrainerAvailabilityUseCase(
+      this.courseRepository,
+      this.trainerRepository,
+    );
+
+    const checkCourse = await checkTrainerAvailabilityUseCase.execute({
+      trainerId: data.trainerId,
+      date: data.date,
+    });
+
+    if(checkCourse.length >= 1) throw new Error("This trainer is already assigned to a course today");
 
     //verify if subject exist
     const getTrainingSubjectByIdUseCase = new GetTrainingSubjectByIdUseCase(
