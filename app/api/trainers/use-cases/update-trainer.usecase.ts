@@ -1,5 +1,5 @@
 import { Trainer } from "@prisma/client";
-import { TrainerRepository } from "../trainners.repository";
+import { TrainerRepository } from "../repository/trainners.repository";
 
 interface UpdateTrainerDTO {
   id: number;

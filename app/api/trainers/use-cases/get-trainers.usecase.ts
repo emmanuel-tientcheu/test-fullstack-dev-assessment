@@ -1,4 +1,4 @@
-import { TrainerRepository } from "../trainners.repository";
+import { TrainerRepository } from "../repository/trainners.repository";
 
 export class GetAllTrainersUseCase {
   constructor(private trainerRepo: TrainerRepository) {}

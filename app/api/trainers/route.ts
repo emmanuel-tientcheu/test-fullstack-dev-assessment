@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { TrainerRepository } from "./trainners.repository";
+import { TrainerRepository } from "./repository/trainners.repository";
 import { GetAllTrainersUseCase } from "./use-cases/get-trainers.usecase";
 import { formatResponse } from "@/core/responseFormatter";
 import { CreateTrainerUseCase } from "./use-cases/create-trainer.usecase";

@@ -1,4 +1,4 @@
-import { TrainerRepository } from "../trainners.repository";
+import { TrainerRepository } from "../repository/trainners.repository";
 import { Trainer } from "@prisma/client";
 
 interface CreateTrainerDTO {

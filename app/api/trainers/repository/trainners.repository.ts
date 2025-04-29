@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { Trainer } from "@prisma/client";
-import { UpdateTrainerDTO } from "./dto/update-trainer.dto";
+import { UpdateTrainerDTO } from "../dto/update-trainer.dto";
 
 export class TrainerRepository {
   async findAll() {
