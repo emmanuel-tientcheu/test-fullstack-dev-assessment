@@ -4,17 +4,19 @@ import { TrainerRepository } from "../../trainers/repository/trainners.repositor
 import { GetTrainerUseCase } from "../../trainers/use-cases/get-trainer.usecase";
 import { NextResponse } from "next/server";
 import { formatResponse } from "@/core/responseFormatter";
+import { TrainingSubjectRepository } from "../../training-subjects/repository/training-subject.repository";
+import { GetTrainingSubjectByIdUseCase } from "../../training-subjects/use-cases/get-training-subject.usecase";
 
 interface CreateCourseDTO {
   name: string;
   date: string;
-  subject: string;
   location: string;
   participants: number;
   notes?: string;
   price: number;
   trainer_price: number;
   trainerId: number; // ID du formateur
+  trainingSubjectIds: number[]; // Tableau d'IDs des subjects associés au cours
 }
 
 export class CreateCourseUseCase {
@@ -27,7 +29,7 @@ export class CreateCourseUseCase {
   async execute(data: CreateCourseDTO): Promise<Course> {
     if (
       !data.name ||
-      !data.subject ||
+      !data.trainingSubjectIds ||
       !data.location ||
       !data.date ||
       !data.trainerId
@@ -35,13 +37,28 @@ export class CreateCourseUseCase {
       throw new Error("Invalid data provided");
     }
 
-    const repo = new TrainerRepository();
-    const useCase = new GetTrainerUseCase(repo);
+    const trainerRepository = new TrainerRepository();
+    const getTrainerUseCase = new GetTrainerUseCase(trainerRepository);
 
-    const trainer = await useCase.execute(Number(data.trainerId));
+    //verify if trainer exist
+    const trainer = await getTrainerUseCase.execute(Number(data.trainerId));
 
     if (!trainer) {
       throw new Error("Trainer not found");
+    }
+
+    //verify if subject exist
+    const trainerSubjectRepository = new TrainingSubjectRepository();
+    const getTrainingSubjectByIdUseCase = new GetTrainingSubjectByIdUseCase(
+      trainerSubjectRepository,
+    );
+
+    for (const trainerSubjectId of data.trainingSubjectIds) {
+      const subject =
+        await getTrainingSubjectByIdUseCase.execute(trainerSubjectId);
+      if (!subject) {
+        throw new Error(`Subject with ID ${trainerSubjectId} not found`);
+      }
     }
 
     const course = await this.courseRepository.createCourse(data);

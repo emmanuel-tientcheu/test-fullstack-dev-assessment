@@ -27,13 +27,13 @@ model TrainingSubject {
   id       Int        @id @default(autoincrement())
   name     String     @unique
   trainers Trainer[]
+  courses  Course[]  @relation("CourseSubjects")
 }
 
 model Course {
   id            Int      @id @default(autoincrement())
   name          String
   date          DateTime
-  subject       String
   location      String
   participants  Int
   notes         String?
@@ -41,6 +41,7 @@ model Course {
   trainer_price Float
   trainerId     Int      // Référence à l'ID du Trainer
   trainer       Trainer  @relation(fields: [trainerId], references: [id])
+  trainingSubjects TrainingSubject[] @relation("CourseSubjects")
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

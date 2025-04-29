@@ -10,16 +10,19 @@ export class CourseRepository {
       data: {
         name: data.name,
         date: new Date(data.date),
-        subject: data.subject,
         location: data.location,
         participants: data.participants,
         notes: data.notes,
         price: data.price,
         trainer_price: data.trainer_price,
         trainerId: data.trainerId,
+        trainingSubjects: {
+          connect: data.trainingSubjectIds.map((id) => ({ id })),
+        },
       },
       include: {
         trainer: true,
+        trainingSubjects: true,
       },
     });
   }
