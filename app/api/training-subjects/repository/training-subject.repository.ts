@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { CreateTrainingSubjectDTO } from "../dto/create-training-subject-dto";
+import { UpdateTrainingSubjectDTO } from "../dto/update-training-subject.dto";
 
 export class TrainingSubjectRepository {
   async getAllWithTrainers() {
@@ -8,6 +9,13 @@ export class TrainingSubjectRepository {
 
   async create(data: CreateTrainingSubjectDTO) {
     return prisma.trainingSubject.create({
+      data,
+    });
+  }
+
+  async update(id: number, data: UpdateTrainingSubjectDTO) {
+    return prisma.trainingSubject.update({
+      where: { id },
       data,
     });
   }
