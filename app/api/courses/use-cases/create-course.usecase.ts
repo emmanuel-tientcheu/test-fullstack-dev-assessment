@@ -21,9 +21,17 @@ interface CreateCourseDTO {
 
 export class CreateCourseUseCase {
   private courseRepository: CourseRepository;
+  private trainerRepository: TrainerRepository;
+  private trainingSubjectRepository: TrainingSubjectRepository;
 
-  constructor(courseRepository: CourseRepository) {
+  constructor(
+    courseRepository: CourseRepository,
+    trainerRepository: TrainerRepository,
+    trainingSubjectRepository: TrainingSubjectRepository,
+  ) {
     this.courseRepository = courseRepository;
+    this.trainerRepository = trainerRepository;
+    this.trainingSubjectRepository = trainingSubjectRepository;
   }
 
   async execute(data: CreateCourseDTO): Promise<Course> {
@@ -37,8 +45,7 @@ export class CreateCourseUseCase {
       throw new Error("Invalid data provided");
     }
 
-    const trainerRepository = new TrainerRepository();
-    const getTrainerUseCase = new GetTrainerUseCase(trainerRepository);
+    const getTrainerUseCase = new GetTrainerUseCase(this.trainerRepository);
 
     //verify if trainer exist
     const trainer = await getTrainerUseCase.execute(Number(data.trainerId));
@@ -48,9 +55,8 @@ export class CreateCourseUseCase {
     }
 
     //verify if subject exist
-    const trainerSubjectRepository = new TrainingSubjectRepository();
     const getTrainingSubjectByIdUseCase = new GetTrainingSubjectByIdUseCase(
-      trainerSubjectRepository,
+      this.trainingSubjectRepository,
     );
 
     for (const trainerSubjectId of data.trainingSubjectIds) {

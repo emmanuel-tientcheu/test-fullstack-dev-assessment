@@ -3,6 +3,8 @@ import { CreateCourseSchema } from "./dto/create-course.dto";
 import { formatResponse } from "@/core/responseFormatter";
 import { CourseRepository } from "./repository/courses.repository";
 import { CreateCourseUseCase } from "./use-cases/create-course.usecase";
+import { TrainerRepository } from "../trainers/repository/trainners.repository";
+import { TrainingSubjectRepository } from "../training-subjects/repository/training-subject.repository";
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,8 +18,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const repo = new CourseRepository();
-    const useCase = new CreateCourseUseCase(repo);
+    const repository = new CourseRepository();
+    const trainerRepository = new TrainerRepository();
+    const trainingSubjectRepository = new TrainingSubjectRepository();
+
+    const useCase = new CreateCourseUseCase(
+      repository,
+      trainerRepository,
+      trainingSubjectRepository,
+    );
 
     const course = await useCase.execute(parsed.data);
 
