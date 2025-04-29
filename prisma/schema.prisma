@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  // output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Trainer {
+  id               Int               @id @default(autoincrement())
+  name             String
+  email            String            @unique
+  location         String
+  trainingSubjects TrainingSubject[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+}
+
+model TrainingSubject {
+  id       Int        @id @default(autoincrement())
+  name     String     @unique
+  trainers Trainer[]
+}
+
+// "trainer": {
+//     "name": "John Doe",
+//     "training_subjects": ["React.js", "Next.js"],
+//     "location": "Berlin",
+//     "email": "john.doe@example.com"
+//   }
