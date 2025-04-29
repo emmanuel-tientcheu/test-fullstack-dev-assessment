@@ -19,4 +19,16 @@ export class TrainingSubjectRepository {
       data,
     });
   }
+
+  async deleteById(id: number): Promise<void> {
+    await prisma.trainingSubject.delete({
+      where: { id },
+    });
+  }
+
+  async findById(id: number) {
+    return prisma.trainingSubject.findUnique({
+      where: { id },
+    });
+  }
 }
